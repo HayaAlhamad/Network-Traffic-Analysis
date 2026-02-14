@@ -34,7 +34,7 @@ To demonstrate the interception of unencrypted HTTP traffic to extract data (lik
 
 ### Evidence
 A screenshot of the Burp Suite configuration process is included in this repository.
-*   *(See `burp-suite-https-interception.png` )*
+*  *(See burp-suite-https-interception-1.png and burp-suite-https-interception-2.png )*
 
 ---
 
