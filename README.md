@@ -70,7 +70,7 @@ Capturing and reading traffic is useful for troubleshooting, but the same skills
 
 Knowing what a normal DORA exchange and a normal three-way handshake look like matters because it gives me a baseline. Once I know what's normal, I can spot what isn't:
 
-**What I'd look for:**
+**What to look for:**
 - A client sending repeated DHCP Discover messages with no Offer coming back, which can mean a rogue or overloaded DHCP server, or no server reachable at all
 - An unexpected DHCP server responding (a second Offer from an IP that shouldn't be handing out leases) — a classic sign of a rogue DHCP server on the network
 - TCP handshakes that never complete (SYN with no SYN-ACK, or SYN-ACK with no final ACK), which can indicate a SYN scan or a service that's down
@@ -89,7 +89,7 @@ Capturing an HTTP GET request with a cookie header in plain text was the point o
 - Internal traffic to login pages or APIs that isn't encrypted
 - A DLP or IDS rule matching cleartext password fields in HTTP POST bodies
 
-**A rule I'd write:**
+**A rule to write:**
 > Flag any HTTP (port 80) request containing a `Cookie`, `Authorization`, or `password=` pattern as a "cleartext credential exposure" finding, not just an alert — this is usually a misconfiguration to fix, not an attack.
 
 **How I'd respond:** This is less about catching an attacker and more about catching a weak spot before someone else does. I'd report it as a finding: redirect the service to HTTPS, and check whether anyone else on the network (or outside it, if this touches a public segment) could have captured that traffic.
@@ -98,13 +98,13 @@ Capturing an HTTP GET request with a cookie header in plain text was the point o
 
 Setting up a proxy to decrypt HTTPS traffic requires the client to trust the proxy's CA certificate. That requirement is exactly the detection opportunity:
 
-**What I'd look for:**
+**What to look for:**
 - An unexpected or self-signed CA certificate installed in a user's trust store, which TLS inspection tools or endpoint management software can flag
 - Certificate warnings a user reports seeing and ignoring, since users clicking through TLS warnings is how real MitM attacks often succeed
 - Unusual certificate chains for well-known domains, which I'd check by actively monitoring certificate transparency logs or TLS fingerprints (e.g. JA3) for mismatches against expected values
 
-**How I'd respond:** If this shows up unexpectedly on an endpoint (not as part of sanctioned corporate TLS inspection), I'd treat it as a strong indicator of an adversary-in-the-middle setup and isolate the host for investigation.
+**How to respond:** If this shows up unexpectedly on an endpoint (not as part of sanctioned corporate TLS inspection), I'd treat it as a strong indicator of an adversary-in-the-middle setup and isolate the host for investigation.
 
-### What I took from this
+### What to take from this
 
 The common thread across all three exercises is that each attack technique has a "normal baseline" it has to deviate from to work. A rogue DHCP server has to answer queries it shouldn't. Cleartext traffic has to not be encrypted. A MitM proxy has to install a cert it shouldn't be trusted to install. Knowing the protocols well enough to build these captures is the same knowledge needed to recognize when they look wrong.
